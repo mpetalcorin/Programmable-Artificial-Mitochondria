@@ -1,64 +1,57 @@
 # Programmable-Artificial-Mitochondria
-A manufacturing-grade DBTL workflow with QC and ML-guided candidate selection for engineering IMM-like ATP power modules.
+**A manufacturing-grade Design–Build–Test–Learn (DBTL) workflow for IMM-like ATP power modules, with QC gating, interpretable ML, robustness maps, and surrogate-guided next-build proposals.**
 
-Programmable artificial mitochondria, built as a manufacturable process, standardized build records, QC gates that expose leak and dispersion failures, and ML surrogates that predict ATP output, quantify uncertainty, and propose the next best designs for data-efficient iteration.
+## Summary
+Mitochondria generate ATP by coupling proton pumping across the **inner mitochondrial membrane (IMM)** to **F0F1 ATP synthase**. ATP synthesis can be reconstructed in artificial membranes under driven conditions, for example using light-driven proton pumps or respiration-like NADH-driven systems (Deisinger et al., 1993; Steinberg-Yfrach et al., 1998; Berhanu et al., 2019; von Ballmoos et al., 2016; Biner et al., 2020).
 
-# IMM-Energy-Modules-DBTL
-**A proof-of-concept, simulation-driven Design–Build–Test–Learn (DBTL) workflow for engineered inner-mitochondrial-membrane-like (IMM-like) energy modules, linking manufacturing build records to ATP output using interpretable ML, robustness maps, and surrogate-guided next-build proposals.**
+A persistent bottleneck is **reliable, scalable iteration**. Performance varies with membrane leak, protein insertion/orientation, lipid composition (including cardiolipin), detergent conditions, and process parameters. This repository reframes IMM-like energy-module development as a **manufacturable process**: every build is recorded, QC-gated, modelled, stress-tested for robustness, and used to propose the next experiments.
 
-## Overview
-This repository contains a reproducible, notebook-first workflow that treats **bioenergetic membrane reconstitution** as a **manufacturable process**, not a one-off demonstration. The code simulates “build records” for IMM-like energy modules and shows how to:
+**Core idea:** standardize build records and QC, then use interpretable ML surrogates to learn which controllable knobs drive ATP output, quantify uncertainty, map robust operating envelopes, and generate the next best build proposals for data-efficient iteration.
 
-- capture **manufacturing-style variation** (lot-to-lot variability),
-- implement explicit **QC gates** (PASS, CONDITIONAL_PASS, FAIL),
-- train an interpretable **surrogate model** to predict ATP output from build knobs,
-- compute **uncertainty proxies** to support risk-aware decisions,
-- generate **robustness maps** across leak and polydispersity,
-- propose **next builds** using surrogate-guided candidate selection,
-- export **publication-ready figures and tables**.
+## What this repo provides
+Running the notebook/script end-to-end generates:
 
-The design includes three operating modes:
-- **LIGHT**: light-driven proton pumping coupled to ATP synthase,
-- **NADH**: respiration-like NADH-driven proton pumping coupled to ATP synthase,
-- **NONE**: control/background ATP mode.
+- **Simulated build dataset** (`saam_builds.csv`) plus **one JSON build record per build**
+- **QC outcomes** (PASS, CONDITIONAL_PASS, FAIL) with summary tables
+- **Exploratory figures** (mode distributions, leak suppression, lipid composition maps, stability proxies)
+- **Surrogate model** results (held-out performance, prediction uncertainty proxy)
+- **Interpretability** (permutation importance, partial dependence)
+- **Robustness maps** across leak × dispersity (PDI) buckets
+- **Candidate proposals** (top next builds, trade-off visualizations)
+- **figures and tables** exported directly from the run (PNG + PDF; CSV tables)
 
-Rate and stability magnitudes are benchmarked to peer-reviewed, PubMed-indexed literature cited in the manuscript and in the notebook outputs (Mitchell, 1961; Mitchell, 1966; Racker & Stoeckenius, 1974; Rigaud & Lévy, 2003; Schägger & Pfeiffer, 2000; Pfeiffer et al., 2003; Cogliati et al., 2016; Biner et al., 2020; Jarman et al., 2021).
+This is a **simulation-benchmarked proof of concept** intended to transfer directly to wet-lab programs by replacing proxies with measured readouts while keeping the same DBTL structure.
 
-### What gets generated
-Running the notebook/script will generate:
-- **Build records** (one JSON per build) in `outputs/build_records/`
-- **Dataset CSV** in `outputs/data/`
-- **Tables (CSV)** in `outputs/tables/`
-- **Figures (PNG + PDF)** in `outputs/figures/`
+## Operating modes
+The workflow includes three modes:
 
-## Quickstart
+- **LIGHT**: light-driven proton pumping coupled to ATP synthase  
+- **NADH**: respiration-like NADH-driven proton pumping coupled to ATP synthase  
+- **NONE**: background/control ATP mode  
 
-### 1) Create an environment
-Choose one:
+Rate and stability magnitudes are benchmarked to peer-reviewed, journal-indexed reports of driven ATP synthesis and respiration-like reconstructions (Deisinger et al., 1993; Steinberg-Yfrach et al., 1998; Berhanu et al., 2019; von Ballmoos et al., 2016; Biner et al., 2020).
 
-**Option A, conda**
-```bash
-conda env create -f environment.yml
-conda activate imm-dbt
-```
 ## Repository structure
+A typical layout is:
 ```
-IMM-Energy-Modules-DBTL/
-├── notebooks/
-│   └── imm_energy_modules_dbtl.ipynb
-├── src/
-│   └── imm_energy_modules_dbtl.py
-├── outputs/
-│   ├── figures/
-│   ├── tables/
-│   ├── data/
-│   └── build_records/
-│   └── references.md
-├── environment.yml
-├── requirements.txt
-└── README.md
-└── Model Card.md
-└── Datasheet.md
+Programmable-Artificial-Mitochondria/
+├─ notebooks/
+│  └─ imm_energy_modules_dbtl.ipynb
+├─ src/
+│  └─ imm_energy_modules_dbtl.py
+├─ outputs/
+│  ├─ data/
+│  │  └─ saam_builds.csv
+│  ├─ build_records/
+│  │  └─ SAAM-00000.json …
+│  ├─ figures/
+│  │  └─ Figure*.png, Figure*.pdf
+│  └─ tables/
+│     └─ Table*.csv
+├─ model-card.md
+├─ datasheet.md
+├─ requirements.txt
+└─ README.md
 ```
 ## What the workflow does (DBTL)
 ### Design
@@ -139,7 +132,7 @@ GitHub: https://github.com/mpetalcorin
 **Primary task:** Predict **ATP production rate** (µM/min) for IMM-like engineered energy-module builds from build-record features.  
 **Version:** v0.1 (proof-of-concept)  
 **Implementation:** scikit-learn `RandomForestRegressor` wrapped in a `Pipeline` with `ColumnTransformer` + `OneHotEncoder`.  
-**Developed by:** Mark Ihrwell R. Petalcorin  
+**Developed by:** Mark I.R. Petalcorin  
 **License:** MIT or Apache-2.0
 
 ## Intended use
@@ -241,7 +234,11 @@ IMM organization and lipid rationale:
 - Pfeiffer, K., Gohil, V., Stuart, R. A., Hunte, C., Brandt, U., Greenberg, M. L., & Schägger, H. (2003). Cardiolipin stabilizes respiratory chain supercomplexes. *Journal of Biological Chemistry, 278*(52), 52873–52880. https://doi.org/10.1074/jbc.M308366200
 
 Respiration-like minimal systems precedent:
-- Biner, O., Fedor, J. G., Yin, Z., Hirst, J., & Hatzakis, N. S. (2020). Bottom-up construction of a minimal system for cellular respiration and energy regeneration. *Proceedings of the National Academy of Sciences of the United States of America*. https://pmc.ncbi.nlm.nih.gov/articles/PMC7611821/
+- Biner, O., Fedor, J. G., Yin, Z., Hirst, J., & Hatzakis, N. S. (2020). Bottom-up construction of a minimal system for cellular respiration and energy regeneration. *ACS Synth. Biol., 9*(6) 1450–1459.  https://doi.org/10.1021/acssynbio.0c00110
+- Berhanu, S., Ueda, T., & Kuruma, Y. (2019). Artificial photosynthetic cell producing energy for protein synthesis. *Nature Communications, 10*(1), 1325. https://doi.org/10.1038/s41467-019-09147-4
+- Deisinger, B., Scholz, C., Stremmel, W., & Junge, W. (1993). Purification of ATP synthase from beef heart mitochondria and co-reconstitution with bacteriorhodopsin into liposomes capable of light-driven ATP synthesis. *European Journal of Biochemistry, 218*(2), 377–383. https://doi.org/10.1111/j.1432-1033.1993.tb18387.x
+- Steinberg-Yfrach, G., Rigaud, J.-L., Durantini, E. N., Moore, A. L., Gust, D., & Moore, T. A. (1998). Light-driven production of ATP catalysed by F0F1-ATP synthase in an artificial photosynthetic membrane. *Nature, 392*(6675), 479–482. https://doi.org/10.1038/33116
+- von Ballmoos, C., Biner, O., Nilsson, T., & Brzezinski, P. (2016). Mimicking respiratory phosphorylation using purified enzymes. *Biochimica et Biophysica Acta (BBA) - Bioenergetics, 1857*(4), 321–331. https://doi.org/10.1016/j.bbabio.2015.12.007
 
 # Datasheet for Dataset: IMM-Energy-Modules-DBTL (Simulated Build Records)
 
@@ -368,12 +365,3 @@ Typical feature groups include:
 - **Proxy variables:** pmf, orientation, and leak are placeholders for real assays.
 - **Simplified physics:** No explicit Δψ/ΔpH electrochemical modeling, buffering, ionic flux, or mechanistic respiratory kinetics.
 - **Domain shift risk:** Models trained on this dataset will not generalize to real experiments without retraining on measured build data.
-
-## 12. Recommended citation (dataset)
-If you publish work using this dataset, cite the associated manuscript in `manuscript/` and the conceptual anchors:
-
-- Mitchell, P. (1961). Coupling of phosphorylation to electron and hydrogen transfer by a chemiosmotic type of mechanism. *Nature*. https://doi.org/10.1038/191144a0  
-- Mitchell, P. (1966). Chemiosmotic coupling in oxidative and photosynthetic phosphorylation. *Biological Reviews*. https://doi.org/10.1111/j.1469-185X.1966.tb01501.x  
-- Racker, E., & Stoeckenius, W. (1974). Reconstitution of purple membrane vesicles catalyzing light-driven proton uptake and ATP formation. *Journal of Biological Chemistry, 249*(2), 662–663. https://pubmed.ncbi.nlm.nih.gov/4272126/  
-- Rigaud, J.-L., & Lévy, D. (2003). Reconstitution of membrane proteins into liposomes. *Methods in Enzymology, 372*, 65–86. https://doi.org/10.1016/S0076-6879(03)72004-7  
-- Biner, O., Fedor, J. G., Yin, Z., Hirst, J., & Hatzakis, N. S. (2020). Bottom-up construction of a minimal system for cellular respiration and energy regeneration. *Proceedings of the National Academy of Sciences of the United States of America*. https://pmc.ncbi.nlm.nih.gov/articles/PMC7611821/
