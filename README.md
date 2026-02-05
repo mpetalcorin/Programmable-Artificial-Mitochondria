@@ -1,5 +1,5 @@
 # Programmable-Artificial-Mitochondria
-**A manufacturing-grade Design–Build–Test–Learn (DBTL) workflow for IMM-like ATP power modules, with QC gating, interpretable ML, robustness maps, and surrogate-guided next-build proposals.**
+**A manufacturing-grade Design–Build–Test–Learn (DBTL) workflow for engineered inner-mitochondrial-membrane (IMM)-like ATP power modules, with QC gating, interpretable ML, robustness maps, and surrogate-guided next-build proposals.**
 
 ## Summary
 Mitochondria generate ATP by coupling proton pumping across the **inner mitochondrial membrane (IMM)** to **F0F1 ATP synthase**. ATP synthesis can be reconstructed in artificial membranes under driven conditions, for example using light-driven proton pumps or respiration-like NADH-driven systems (Deisinger et al., 1993; Steinberg-Yfrach et al., 1998; Berhanu et al., 2019; von Ballmoos et al., 2016; Biner et al., 2020).
