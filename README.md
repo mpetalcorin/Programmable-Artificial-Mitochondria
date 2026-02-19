@@ -117,8 +117,10 @@ To use this workflow with real experiments:
 	•	insertion/orientation assays.
 	2.	Use the same QC gates (tune thresholds to your assay).
 	3.	Retrain the surrogate and re-run candidate proposal.
-## Citing
-If you use this repository, please cite the accompanying manuscript.
+
+## Citation
+**Petalcorin, M.I.R.** (2026). DBTL Programming of Mitochondrial Inner-Membrane-Like ATP Modules. chemRxiv. https://chemrxiv.org/doi/pdf/10.26434/chemrxiv.15000002/v1
+
 ## Contact
 Mark I.R. Petalcorin
 London, UK
